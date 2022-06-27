@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\DL_TOCRPDF.cpp" />
+    <ClCompile Include="Main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="TOCRDemo.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Headers">
+      <UniqueIdentifier>{6a57bbba-cf8f-4533-9425-f6f19d6f2a01}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="resource.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DL_TOCRPDF.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\TOCRdll.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\TOCRerrs.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\TOCRlangSel.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\TOCRPDF.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\TOCRPDF_API.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\TOCRuser.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

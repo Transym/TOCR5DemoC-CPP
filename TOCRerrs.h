@@ -1,4 +1,4 @@
-// List of all error codes, Version 5.0.0.0
+// List of all error codes, Version 5.1.0.0
 
 #define TOCR_OK 0
 
@@ -73,12 +73,12 @@
 #define TOCERR_MMFNOTALLOWED				84
 #define TOCRERR_ILLEGALFONTID				85
 
-#define TOCRERR_FAILGETMMF				90
+#define TOCRERR_FAILGETMMF					90
 #define TOCRERR_MMFNOTAVAILABLE				91
 
 #define TOCRERR_PDFEXTRACTOR				95
-#define TOCRERR_PDFERROR2				96
-#define TOCRERR_PDFARCHIVER				97
+#define TOCRERR_PDFERROR2					96
+#define TOCRERR_PDFARCHIVER					97
 
 
 #define TOCRERR_FONTSNOTLOADED				-2

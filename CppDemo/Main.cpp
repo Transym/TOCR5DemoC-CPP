@@ -9,9 +9,9 @@
  * This program demonstrates the simple processing of a single file.
  * No real attempt is made to handle errors.
  *
- * Copyright (C) 2012 Transym Computer Services Ltd.
+ * Copyright (C) 2022 Transym Computer Services Ltd.
  *
- * TOCR4.0DemoC++ Issue1
+ * TOCR5 DemoC++
  */
 
 #include <stdlib.h>
@@ -39,7 +39,8 @@
 // for PDF
 #include "DL_TOCRPDF.h"
 
-void Example1();
+void Example1V4();
+void Example1V5();
 void Example2();
 void Example3();
 void Example4();
@@ -74,8 +75,8 @@ int APIENTRY WinMain(HINSTANCE hInstance,
                      LPSTR     lpCmdLine,
                      int       nCmdShow)
 {
-	MessageBox(NULL, "TOCR5.0C++Demo", "Main", MB_TASKMODAL | MB_TOPMOST);
-	Example1();		// Demonstrates how to OCR a file (as v4)
+	Example1V4();	// Demonstrates how to OCR a file (as v4)
+	Example1V5();	// Demonstrates how to OCR a file (as v5)
 	Example2();		// Demonstrates how to OCR multiple files
 	Example3();		// Demonstrates how to OCR an image using a memory mapped file created by TOCR
 	Example4();		// Demonstrates how to OCR an image using a memory mapped file created here, Also demonstrates the use of TOCRRESULTSEX_EG
@@ -89,11 +90,11 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 	return 0;
 } // main
 
-// Demonstrates how to OCR a file
-void Example1()
+// Demonstrates how to OCR a file as V4
+void Example1V4()
 {
 	TOCRJOBINFO2		JobInfo2;
-	TOCRRESULTS			*Results = 0;
+	TOCRRESULTS*		Results = 0;
 	long				Status;
 	long				JobNo = 0;
 	char				InputFile[MAX_PATH];
@@ -109,27 +110,73 @@ void Example1()
 	//JobInfo2.JobType = TOCRJOBTYPE_TIFFFILE;
 
 	// or
-	strcpy(InputFile,SAMPLE_BMP_FILE);
+	strcpy(InputFile, SAMPLE_BMP_FILE);
 	JobInfo2.JobType = TOCRJOBTYPE_DIBFILE;
 
 	JobInfo2.InputFile = InputFile;
-	MessageBox(NULL, "TOCR5.0C++Demo Example 1 Load file - V4 interface", JobInfo2.InputFile, MB_TASKMODAL | MB_TOPMOST);
 
 	Status = TOCRInitialise(&JobNo);
 
-#ifdef _DEBUG
-	MessageBox(NULL, "TOCRInitialise done - attach debugger now", "Example 1", MB_TASKMODAL | MB_TOPMOST);
-#endif // _DEBUG
-
-	if ( Status == TOCR_OK ) {
-		if ( OCRWait(JobNo, JobInfo2) ) {
-		//if ( OCRPoll(JobNo, JobInfo2) ) {
-			if ( GetResults(JobNo, &Results) ) {
+	if (Status == TOCR_OK) {
+		if (OCRWait(JobNo, JobInfo2)) {
+			//if ( OCRPoll(JobNo, JobInfo2) ) {
+			if (GetResults(JobNo, &Results)) {
 
 				// Display the results
 
 				if (FormatResults(Results, Msg)) {
-					MessageBox(NULL, Msg, "Example 1", MB_TASKMODAL | MB_TOPMOST);
+					MessageBox(NULL, Msg, "Example 1 V4", MB_TASKMODAL | MB_TOPMOST);
+				}
+
+				free(Results);
+			}
+	}
+
+		TOCRShutdown(JobNo);
+}
+} // Example1()
+
+
+// Demonstrates how to OCR a file as V4
+void Example1V5()
+{
+	TOCRJOBINFO_EG		JobInfo_EG;
+	TOCRRESULTSEX_EG*	Results = 0;
+	long				Status;
+	long				JobNo = 0;
+	char				InputFile[MAX_PATH];
+	wchar_t				Msg[10240];
+
+	TOCRSetConfig(TOCRCONFIG_DEFAULTJOB, TOCRCONFIG_DLL_ERRORMODE, TOCRERRORMODE_MSGBOX);
+	//TOCRSetConfig(TOCRCONFIG_DEFAULTJOB, TOCRCONFIG_DLL_ERRORMODE, TOCRERRORMODE_LOG); // Log Errors
+	//	TOCRGetJobDBInfo(&JobNo);
+
+	memset(&JobInfo_EG, 0, sizeof(TOCRJOBINFO2));
+
+	//strcpy(InputFile, SAMPLE_TIF_FILE);
+	//JobInfo_EG.JobType = TOCRJOBTYPE_TIFFFILE;
+
+	// or
+	//strcpy(InputFile, SAMPLE_BMP_FILE);
+	//JobInfo_EG.JobType = TOCRJOBTYPE_DIBFILE;
+
+	// or
+	strcpy(InputFile, SAMPLE_PDF_FILE);
+	JobInfo_EG.JobType = TOCRJOBTYPE_PDFFILE;
+
+	JobInfo_EG.InputFile = InputFile;
+
+	Status = TOCRInitialise(&JobNo);
+
+	if (Status == TOCR_OK) {
+		if (OCRWait(JobNo, JobInfo_EG)) {
+			//if ( OCRPoll(JobNo, JobInfo_EG) ) {
+			if (GetResults(JobNo, &Results)) {
+
+				// Display the results
+
+				if (FormatResults(Results, Msg)) {
+					MessageBoxW(NULL, Msg, L"Example 1 V5", MB_TASKMODAL | MB_TOPMOST);
 				}
 
 				free(Results);
@@ -311,7 +358,7 @@ void Example4()
 
 	Status = TOCRInitialise(&JobNo);
 	if ( Status == TOCR_OK ) {
-		//Status = TOCRConvertFormat(JobNo, SAMPLE_TIF_FILE, TOCRCONVERTFORMAT_TIFFFILE, &hMMF, TOCRCONVERTFORMAT_MMFILEHANDLE, 0);
+		Status = TOCRConvertFormat(JobNo, SAMPLE_TIF_FILE, TOCRCONVERTFORMAT_TIFFFILE, &hMMF, TOCRCONVERTFORMAT_MMFILEHANDLE, 0);
 		//Status = TOCRConvertFormat(JobNo, SAMPLE_PDF_FILE, TOCRCONVERTFORMAT_PDFFILE, &hMMF, TOCRCONVERTFORMAT_MMFILEHANDLE, 0);
 		if ( Status == TOCR_OK ) {
 
@@ -447,13 +494,13 @@ void Example6()
 						strcat(Msg, " V1/2 UPGRADE to V3 SE licence");
 						break;
 					case TOCRLICENCE_V3PRO:
-						strcat(Msg, " V3 Pro/V4 licence");
+						strcat(Msg, " V3 Pro/V4/V5 licence");
 						break;
 					case TOCRLICENCE_V3PROUPGRADE:
-						strcat(Msg, " V1/2 UPGRADE to V3 Pro/V4 licence");
+						strcat(Msg, " V1/2 UPGRADE to V3 Pro/V4/V5 licence");
 						break;
 					case TOCRLICENCE_V3SEPROUPGRADE:
-						strcat(Msg, " V3 SE UPGRADE to V3 Pro/V4 licence");
+						strcat(Msg, " V3 SE UPGRADE to V3 Pro/V4/V5 licence");
 						break;
 				}
 				if ( Volume != 0 || Time != 0 ) {
@@ -861,11 +908,6 @@ void Example10()
 								ResultsInfo.OriginalPageNumber = ImgNo;
 								// 18m) save the OCR results and metadata to a new PDF page at the end of the document in the archiver's memory
 								PdfStatus = DL_PDFArchiverHandle_SaveAppendix(hArchiver, hDocOut, pResultChars, -2, &ResultsInfo);
-								//NP
-								//PdfStatus = DL_PDFArchiverHandle_SaveResults(hArchiver, hDocOut, Results, -2, &ResultsInfo);
-								//PdfStatus = DL_PDFArchiverHandle_SaveResults(hArchiver, hDocOut, Results, -2, pszTitle, width,
-								//	height, dpiX, dpiY ResultsInfo);
-								//PdfStatus = archiver.SaveResults(docOut, *Results, -2, ResultsInfo);
 								//Error Handling
 								if (PdfStatus != TOCRPDF_ErrorOK) {
 									TocrStatus = TOCRERR_FAILOPENFILE3;

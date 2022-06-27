@@ -1,4 +1,4 @@
-// User constants, Version 5.0.0.0
+// User constants, Version 5.1.0.0
 
 #define TOCRJOBMSGLENGTH 512		// max length of a job status message
 #define TOCRFONTNAMELENGTH 65		// max length of a returned font name
@@ -57,7 +57,7 @@
 #define TOCRJOBSPEED_EXPRESS 3
 
 // Settings for TOCRJOBINFO_EG.PROCESSOPTIONS_EG.CCAlgorithm (thresholded Conversions from Colour)
-#define TOCRJOBCC_AVERAGE  0        // (R+G+3)/3
+#define TOCRJOBCC_AVERAGE  0        // (R+G+B)/3
 #define TOCRJOBCC_LUMA_BT601  1     // 0.299*R + 0.587*G + 0.114*B
 #define TOCRJOBCC_LUMA_BT709  2     // 0.2126*R + 0.7152*G + 0.0722*B
 #define TOCRJOBCC_DESATURATION  3   // (max(R,G,B) + min(R,G,B))/2
